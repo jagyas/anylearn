@@ -1,5 +1,6 @@
 import NextAuth from "next-auth"
 import Providers from "next-auth/providers"
+import jwt from "jsonwebtoken";
 
 // For more information on each option (and a full list of options) go to
 // https://next-auth.js.org/configuration/options
@@ -23,29 +24,29 @@ export default NextAuth({
       },
     }),
     */
-    Providers.Facebook({
-      clientId: process.env.FACEBOOK_ID,
-      clientSecret: process.env.FACEBOOK_SECRET,
-    }),
+    // Providers.Facebook({
+    //   clientId: process.env.FACEBOOK_ID,
+    //   clientSecret: process.env.FACEBOOK_SECRET,
+    // }),
     Providers.GitHub({
       clientId: process.env.GITHUB_ID,
       clientSecret: process.env.GITHUB_SECRET,
       // https://docs.github.com/en/developers/apps/building-oauth-apps/scopes-for-oauth-apps
       scope: "read:user"
     }),
-    Providers.Google({
-      clientId: process.env.GOOGLE_ID,
-      clientSecret: process.env.GOOGLE_SECRET,
-    }),
-    Providers.Twitter({
-      clientId: process.env.TWITTER_ID,
-      clientSecret: process.env.TWITTER_SECRET,
-    }),
-    Providers.Auth0({
-      clientId: process.env.AUTH0_ID,
-      clientSecret: process.env.AUTH0_SECRET,
-      domain: process.env.AUTH0_DOMAIN,
-    }),
+    // Providers.Google({
+    //   clientId: process.env.GOOGLE_ID,
+    //   clientSecret: process.env.GOOGLE_SECRET,
+    // }),
+    // Providers.Twitter({
+    //   clientId: process.env.TWITTER_ID,
+    //   clientSecret: process.env.TWITTER_SECRET,
+    // }),
+    // Providers.Auth0({
+    //   clientId: process.env.AUTH0_ID,
+    //   clientSecret: process.env.AUTH0_SECRET,
+    //   domain: process.env.AUTH0_DOMAIN,
+    // }),
   ],
   // Database optional. MySQL, Maria DB, Postgres and MongoDB are supported.
   // https://next-auth.js.org/configuration/databases
@@ -80,13 +81,32 @@ export default NextAuth({
   // https://next-auth.js.org/configuration/options#jwt
   jwt: {
     // A secret to use for key generation (you should set this explicitly)
-    // secret: 'INp8IvdIyeMcoGAgFGoA61DdBglwwSqnXJZkgz8PSnw',
+    secret: process.env.SECRET,
     // Set to true to use encryption (default: false)
     // encryption: true,
     // You can define your own encode/decode functions for signing and encryption
     // if you want to override the default behaviour.
-    // encode: async ({ secret, token, maxAge }) => {},
-    // decode: async ({ secret, token, maxAge }) => {},
+    encode: async ({ secret, token, maxAge }) => {
+      const jwtClaims = {
+        "sub": token.sub.toString() ,
+        "name": token.name ,
+        "email": token.email,
+        "iat": Date.now() / 1000,
+        "exp": Math.floor(Date.now() / 1000) + (24*60*60),
+        "https://hasura.io/jwt/claims": {
+          "x-hasura-allowed-roles": ["user"],
+          "x-hasura-default-role": "user",
+          "x-hasura-role": "user",
+          "x-hasura-user-id": token.id,
+        }
+      };
+      const encodedToken = jwt.sign(jwtClaims, secret, { algorithm: 'HS256'});
+      return encodedToken;
+    },
+    decode: async ({ secret, token, maxAge }) => {
+      const decodedToken = jwt.verify(token, secret, { algorithms: ['HS256']});
+      return decodedToken;
+    },
   },
 
   // You can define custom pages to override the built-in ones. These will be regular Next.js pages
@@ -108,8 +128,21 @@ export default NextAuth({
   callbacks: {
     // async signIn(user, account, profile) { return true },
     // async redirect(url, baseUrl) { return baseUrl },
-    // async session(session, user) { return session },
-    // async jwt(token, user, account, profile, isNewUser) { return token }
+    async session(session, token) { 
+      const encodedToken = jwt.sign(token, process.env.SECRET, { algorithm: 'HS256'});
+      session.id = token.id;
+      session.token = encodedToken;
+      return Promise.resolve(session);
+    },
+    async jwt(token, user, account, profile, isNewUser) { 
+      const isUserSignedIn = user ? true : false;
+      // make a http call to our graphql api
+      // store this in postgres
+      if(isUserSignedIn) {
+        token.id = user.id.toString();
+      }
+      return Promise.resolve(token);
+    }
   },
 
   // Events are useful for logging
