@@ -17,6 +17,7 @@ COPY . /usr/src/app
 # Building app
 RUN npm run build
 EXPOSE 3000
+EXPOSE 9229
 
 # Running the app
-CMD "npm" "run" "start"
+CMD "npm" "run" "dev"
