@@ -8,16 +8,18 @@ WORKDIR /usr/src/app
 
 # Installing dependencies
 COPY package.json /usr/src/app/
-##COPY yarn.lock /usr/src/app/
-RUN yarn install
+COPY package-lock.json /usr/src/app/
+
+RUN npm install
 
 # Copying source files
 COPY . /usr/src/app
 
 # Building app
 RUN npm run build
+
 EXPOSE 3000
 EXPOSE 9229
 
 # Running the app
-CMD "npm" "run" "dev"
+ENTRYPOINT ["npm", "run"]

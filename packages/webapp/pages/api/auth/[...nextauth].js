@@ -138,6 +138,18 @@ export default NextAuth({
       const isUserSignedIn = user ? true : false;
       // make a http call to our graphql api
       // store this in postgres
+      // await fetch('https://hasura-2zfawfzatq-ue.a.run.app/v1/graphql', {
+      //   method: 'POST',
+      //   headers: {
+      //     Authorization: 'Bearer ' + token
+      //   }
+      // })
+      // mutation {
+      //   insert_users_auth_one(object: {id: "1", name: "Jagdeep"}) {
+      //     id
+      //   }
+      // }
+
       if(isUserSignedIn) {
         token.id = user.id.toString();
       }

@@ -2,11 +2,7 @@ version: "3.3"
 
 services:
   webapp:
-    ports:
-      - 3000:3000
-    build:
-      context: packages/webapp
-      dockerfile: Dockerfile
+    command: prod
   e2e:
     image: cypress
     build:
