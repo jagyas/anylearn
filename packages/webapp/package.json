@@ -20,6 +20,7 @@
   ],
   "license": "ISC",
   "dependencies": {
+    "dotenv": "^10.0.0",
     "jsonwebtoken": "^8.5.1",
     "next": "^11.0.0",
     "next-auth": "latest",
