@@ -5,6 +5,9 @@ ENV PORT 3000
 # Create app directory
 RUN mkdir -p /usr/src/app
 
+RUN pwd
+
+RUN ls
 
 # Installing dependencies
 COPY package.json /usr/src/app/
