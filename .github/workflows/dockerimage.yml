@@ -15,12 +15,14 @@ jobs:
     - name: Checkout the code       
       uses: actions/checkout@v1          
     - name: Set up Docker Buildx      
-      uses: crazy-max/ghaction-docker-buildx@v1      
+      uses: crazy-max/ghaction-docker-buildx@v1     
+      working-directory: packages      
       with:        
-        version: latest    
+        version: latest           
     - name: Prepare      
       if: success()      
-      id: prepare      
+      id: prepare
+      working-directory: packages      
       run: |        
         echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
         echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
