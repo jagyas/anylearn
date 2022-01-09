@@ -20,8 +20,7 @@ jobs:
         version: latest           
     - name: Prepare      
       if: success()      
-      id: prepare
-      working-directory: packages      
+      id: prepare      
       run: |        
         echo ::set-output name=docker_platform::${DOCKER_TARGET_PLATFORM}        
         echo ::set-output name=docker_image::${DOCKER_REGISTRY}/${DOCKER_IMAGE}        
@@ -30,7 +29,8 @@ jobs:
       if: success()      
       run: |        
         echo "${DOCKER_PASSWORD}" | docker login ${DOCKER_REGISTRY} --username "${DOCKER_USERNAME}" --password-stdin          
-    - name: Run Buildx (push image)      
+    - name: Run Buildx (push image)
+      working-directory: packages    
       if: success()      
       run: |        
         docker buildx build --platform ${{ steps.prepare.outputs.docker_platform }} --tag ${{ steps.prepare.outputs.docker_image }}:${{ steps.prepare.outputs.version }} --file ./Dockerfile --output type=image,push=true .
