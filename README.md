@@ -20,7 +20,7 @@
 
 ## Overview 
 
-NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications
+NextAuth.js is a complete open source authentication solution for [Next.js](http://nextjs.org/) applications.
 
 This is an example application which shows how `next-auth` is applied to a basic Next.js app. It is also used in many of our CI workflows and other places where a concrete usage example is necessary. 
 
