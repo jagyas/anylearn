@@ -8,14 +8,14 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 # Installing dependencies
-COPY ./packages/webapp/package.json /usr/src/app/
-COPY ./packages/webapp/package-lock.json /usr/src/app/
+COPY package.json /usr/src/app/
+COPY package-lock.json /usr/src/app/
 
 
 RUN npm install
 
 # Copying source files
-COPY ./packages/webapp/ /usr/src/app
+COPY . /usr/src/app
 
 # Building app
 RUN npm run build
