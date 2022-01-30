@@ -21,7 +21,6 @@ COPY . /usr/src/app
 RUN npm run build
 
 EXPOSE 3000
-EXPOSE 9229
 
 # Running the app
-ENTRYPOINT ["npm", "run"]
+ENTRYPOINT ["npm", "run", "prod"]
