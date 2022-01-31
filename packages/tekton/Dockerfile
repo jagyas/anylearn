@@ -4,6 +4,7 @@ WORKDIR /tkncli
 RUN apk add git
 RUN apk add make
 RUN apk add build-base
+RUN export PATH=$PATH:/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin
 RUN git clone https://github.com/tektoncd/cli . && \
     git checkout release-$TKN_VERSION && \
     GO111MODULE=on make bin/tkn 
