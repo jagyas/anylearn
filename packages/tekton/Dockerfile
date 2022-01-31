@@ -1,4 +1,4 @@
-FROM golang:1.14.2 as builder
+FROM golang:1.16-alpine as builder
 ENV TKN_VERSION v0.21.0
 WORKDIR /tkncli
 RUN git clone https://github.com/tektoncd/cli . && \
