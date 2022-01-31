@@ -1,4 +1,4 @@
-FROM golang as builder
+FROM golang:stretch as builder
 ENV TKN_VERSION v0.21.0
 WORKDIR /tkncli
 RUN apk add git
