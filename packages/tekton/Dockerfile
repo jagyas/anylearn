@@ -6,6 +6,5 @@ RUN git clone https://github.com/tektoncd/cli . && \
     GO111MODULE=on make bin/tkn 
 
 
-FROM gcr.io/distroless/base
-COPY --from=builder /tkncli/bin/tkn /
-CMD ["/tkn"]
+FROM debian:10
+COPY --from=builder /tkncli/bin/tkn /usr/bin
