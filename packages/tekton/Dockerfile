@@ -4,6 +4,8 @@ WORKDIR /tkncli
 RUN apk add git
 RUN git clone https://github.com/tektoncd/cli . && \
     git checkout release-$TKN_VERSION && \
+    pwd \
+    ls \
     GO111MODULE=on make bin/tkn 
 
 FROM gcr.io/distroless/base
