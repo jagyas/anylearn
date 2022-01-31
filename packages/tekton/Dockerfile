@@ -5,6 +5,5 @@ RUN git clone https://github.com/tektoncd/cli . && \
     git checkout release-$TKN_VERSION && \
     GO111MODULE=on make bin/tkn 
 
-
 FROM debian:10
 COPY --from=builder /tkncli/bin/tkn /usr/bin
