@@ -1,6 +1,6 @@
 FROM node:12
 
-ENV PORT 3001
+ENV PORT 3000
 
 # Create app directory
 RUN mkdir -p /usr/src/app
@@ -20,7 +20,7 @@ COPY . /usr/src/app
 # Building app
 RUN npm run build
 
-EXPOSE 3001
+EXPOSE 3000
 
 # Running the app
-ENTRYPOINT ["npm", "run", "start:prod"]
+ENTRYPOINT ["npm", "run", "prod"]
