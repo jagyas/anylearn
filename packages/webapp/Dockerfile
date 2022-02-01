@@ -23,4 +23,4 @@ RUN npm run build
 EXPOSE 3000
 
 # Running the app
-ENTRYPOINT ["npm", "run", "prod"]
+ENTRYPOINT ["npm", "run", "start"]
