@@ -9,16 +9,11 @@ RUN mkdir -p /usr/src/app/node_modules/js-sdk
 
 WORKDIR /usr/src/app/js-sdk
 
+# Installing dependencies
+COPY . /usr/src/app/js-sdk
 RUN ls
 RUN pwd
-RUN ls ..
-RUN pwd
-RUN ls ../..
-
-
-# Installing dependencies
-COPY ../js-sdk/package.json /usr/src/app/js-sdk
-COPY ../js-sdk/package-lock.json /usr/src/app/js-sdk
+RUN ls
 
 RUN npm install
 
