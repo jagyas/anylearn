@@ -4,19 +4,6 @@ ENV PORT 3001
 
 # Create app directory
 RUN mkdir -p /usr/src/app
-RUN mkdir -p /usr/src/app/js-sdk
-RUN mkdir -p /usr/src/app/node_modules/js-sdk
-
-WORKDIR /usr/src/app/js-sdk
-
-# Copying source files
-COPY ../js-sdk/ /usr/src/app/js-sdk
-
-# Building app
-RUN npm install
-RUN npm run build
-
-COPY ./build /usr/src/app/node_modules/js-sdk
 
 WORKDIR /usr/src/app
 
