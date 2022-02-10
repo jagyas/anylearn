@@ -15,7 +15,7 @@ COPY controllers/ controllers/
 COPY internal/ internal/
 
 # Build
-RUN CGO_ENABLED=0 GOOS=linux GOARCH=arm64 GO111MODULE=on go build -a -tags timetzdata -o manager main.go
+RUN CGO_ENABLED=0 GOOS=darwin GOARCH=arm64 GO111MODULE=on go build -a -tags timetzdata -o manager main.go
 
 # ---------------------------------------
 FROM alpine:latest as etc-builder
