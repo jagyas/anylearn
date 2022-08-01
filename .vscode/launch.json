@@ -2,10 +2,19 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "java",
+      "name": "Launch test",
+      "request": "launch",
+      "mainClass": "test",
+      "projectName": "anylearn_9fa1277f"
+    },
+    {
       "type": "node",
       "request": "attach",
       "name": "Attach to application",
-      "skipFiles": ["<node_internals>/**"],
+      "skipFiles": [
+        "<node_internals>/**"
+      ],
       "port": 9229,
       "address": "localhost",
       "localRoot": "${workspaceFolder}/packages/webapp/",
