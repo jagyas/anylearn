@@ -10,7 +10,7 @@ export default function Home() {
 
       <main className="flex w-full flex-1 flex-col items-center justify-center px-20 text-center">
         <h1 className="text-6xl font-bold">
-          Welcome to{' '}
+          1 Welcome to{' '}
           <a className="text-blue-600" href="https://nextjs.org">
             Next.js!
           </a>
@@ -30,7 +30,7 @@ export default function Home() {
           >
             <h3 className="text-2xl font-bold">Documentation &rarr;</h3>
             <p className="mt-4 text-xl">
-              Find in-depth information about Next.js features and API.
+              Find in-depth information about Next.js features and API for stage.
             </p>
           </a>
 
