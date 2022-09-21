@@ -1,9 +1,0 @@
-apiVersion: v1
-kind: Pod
-metadata:
-  name: getting-started
-  namespace: ""
-spec:
-  containers:
-  - name: getting-started
-    image: skaffold-example
