@@ -1,0 +1,24 @@
+apiVersion: v1
+kind: Pod
+spec:
+  serviceAccount: jenkins-admin
+  containers:
+  - name: shell
+    image: alpine
+    command:
+    - sleep
+    args:
+      - 30m
+    tty: true
+  - name: kube
+    image: kubespheredev/kubectl:latest-arm64
+    command:
+    - cat
+    tty: true
+  - name: knative
+    image: gcr.io/knative-releases/knative.dev/client/cmd/kn:latest
+    command:
+    - sleep
+    args:
+      - 30m
+    tty: true
