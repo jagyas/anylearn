@@ -1,4 +1,4 @@
-- name: test_db
+- name: anylearn_app_database
   kind: postgres
   configuration:
     connection_info:
@@ -8,4 +8,4 @@
       use_prepared_statements: false
   customization:
     naming_convention: hasura-default
-  tables: "!include test_db/tables/tables.yaml"
+  tables: "!include anylearn_app_database/tables/tables.yaml"
