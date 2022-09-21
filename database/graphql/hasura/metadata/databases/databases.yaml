@@ -1,0 +1,11 @@
+- name: anylearn_app_database
+  kind: postgres
+  configuration:
+    connection_info:
+      database_url: 
+        from_env: PG_DATABASE_URL
+      isolation_level: read-committed
+      use_prepared_statements: false
+  customization:
+    naming_convention: hasura-default
+  tables: "!include anylearn_app_database/tables/tables.yaml"
