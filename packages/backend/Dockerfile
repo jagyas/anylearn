@@ -1,26 +1,49 @@
-FROM node:12
 
-ENV PORT 3001
+FROM node:alpine AS BUILD_IMAGE
 
-# Create app directory
-RUN mkdir -p /usr/src/app
+# couchbase sdk requirements
+RUN apk update && apk add yarn curl bash python3 g++ make && rm -rf /var/cache/apk/*
+
+# install node-prune (https://github.com/tj/node-prune)
+RUN curl -sfL https://gobinaries.com/tj/node-prune | bash -s -- -b /usr/local/bin
 
 WORKDIR /usr/src/app
 
-# Installing dependencies
-COPY package.json /usr/src/app/
-COPY package-lock.json /usr/src/app/
+COPY package.json yarn.lock ./
 
+# install dependencies
+RUN yarn --frozen-lockfile
 
-RUN npm install
+COPY . .
 
-# Copying source files
-COPY . /usr/src/app
+# lint & test
+RUN yarn lint & yarn test
 
-# Building app
-RUN npm run build
+# build application
+RUN yarn build
+
+# remove development dependencies
+RUN npm prune --production
+
+# run node prune
+RUN /usr/local/bin/node-prune
+
+# remove unused dependencies
+RUN rm -rf node_modules/rxjs/src/
+RUN rm -rf node_modules/rxjs/bundles/
+RUN rm -rf node_modules/rxjs/_esm5/
+RUN rm -rf node_modules/rxjs/_esm2015/
+RUN rm -rf node_modules/swagger-ui-dist/*.map
+RUN rm -rf node_modules/couchbase/src/
+
+FROM gcr.io/distroless/nodejs:18
+
+WORKDIR /usr/src/app
+
+# copy from build image
+COPY --from=BUILD_IMAGE /usr/src/app/dist ./dist
+COPY --from=BUILD_IMAGE /usr/src/app/node_modules ./node_modules
 
 EXPOSE 3001
 
-# Running the app
-ENTRYPOINT ["npm", "run", "start:prod"]
+CMD [ "./dist/main.js" ]

@@ -3,16 +3,22 @@ version: "3.3"
 services:
   webapp:
     ports:
-      - 3000:3000
+      - 3001:3001
     build:
       context: packages/webapp
       dockerfile: Dockerfile
-  e2e:
-    image: cypress
+  services:
+    ports:
+      - 3000:3000
     build:
-      context: packages/webapp
-      dockerfile: cypress/Dockerfile
-    container_name: cypress
+      context: packages/services
+      dockerfile: Dockerfile
+  #e2e:
+  #  image: cypress
+  #  build:
+  #    context: packages/webapp
+  #    dockerfile: cypress/Dockerfile
+  #  container_name: cypress
     # mount the host directory e2e/cypress and the file e2e/cypress.json as
     # volumes within the container
     # this means that:
@@ -21,10 +27,10 @@ services:
     #  2. any change that the developer applies to Cypress files on the host
     #     machine immediately takes effect within the e2e container (no docker
     #     rebuild required).
-    volumes:
-      - ./packages/webapp/cypress:/app/cypress
-      - /app/node_modules
-      - /app/.next
+   # volumes:
+   #   - ./packages/webapp/cypress:/app/cypress
+   #   - /app/node_modules
+   #   - /app/.next
 
 
     
