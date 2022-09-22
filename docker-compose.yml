@@ -6,13 +6,27 @@ services:
       - 3001:3001
     build:
       context: packages/webapp
-      dockerfile: Dockerfile
-  services:
+    volumes:
+     - ./packages/webapp:/webapp
+  backend:
     ports:
       - 3000:3000
     build:
-      context: packages/services
-      dockerfile: Dockerfile
+      context: packages/backend
+    volumes:
+     - ./packages/backend:/backend
+    command: npm run debug
+  db:
+    image: postgres:14.5-alpine3.16
+    restart: always
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+    ports:
+      - '5432:5432'
+    volumes: 
+      - ./postgres-data:/var/lib/postgresql/data
+      #- ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
   #e2e:
   #  image: cypress
   #  build:
