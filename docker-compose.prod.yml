@@ -1,8 +1,15 @@
-version: "3.3"
+version: "3.9"
 
 services:
   webapp:
-    command: prod
+    command: dev
+    ports:
+      - 3000:3000
+      - 9229:9229
+    volumes:
+      - ./packages/webapp:/usr/src/app
+      - /usr/src/app/node_modules
+      - /usr/src/app/.next
   e2e:
     image: cypress
     build:

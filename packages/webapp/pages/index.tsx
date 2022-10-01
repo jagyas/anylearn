@@ -62,7 +62,7 @@ const Home: NextPage = () => {
           >
             <h3 className="text-2xl font-bold">Deploy &rarr;</h3>
             <p className="mt-4 text-xl">
-              Instantly deploy your Next.js site to a public URL with Vercel.
+              Instantly deploy your Next.js site to a public URL with Vercel.11
             </p>
           </a>
         </div>
@@ -77,6 +77,7 @@ const Home: NextPage = () => {
         >
           Powered by{' '}
           <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
+          <iframe src="/api/hello"/>
         </a>
       </footer>
     </div>

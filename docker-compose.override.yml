@@ -9,6 +9,17 @@ services:
     #- ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:
       POSTGRES_PASSWORD: admin
+  pgadmin:
+    image: dpage/pgadmin4
+    restart: always
+    depends_on:
+    - postgres
+    ports:
+    - 5050:8081
+    ## you can change pgAdmin default username/password with below environment variables
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin
   graphql-engine:
     image: hasura/graphql-engine:v2.12.0
     ports:
@@ -37,6 +48,7 @@ services:
     - 3000:3000
     - 9229:9229
     environment:
+      NODE_ENV: production
       SERVER_PORT: 8000
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: postgres
@@ -51,6 +63,9 @@ services:
     dockerfile: Dockerfile.dev
     ports:
       - 3001:3001
+    environment:
+      NODE_ENV: production
+      NODE_OPTIONS: --inspect
     build:
       context: packages/backend
     volumes:
