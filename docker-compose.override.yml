@@ -1,14 +1,6 @@
 version: "3.9"
 
 services:
-  postgres:
-    image: postgres:14.5-alpine3.16
-    restart: always
-    volumes:
-    - db_data:/var/lib/postgresql/data
-    #- ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
-    environment:
-      POSTGRES_PASSWORD: admin
   pgadmin:
     image: dpage/pgadmin4
     restart: always
@@ -16,61 +8,41 @@ services:
     - postgres
     ports:
     - 5050:8081
-    ## you can change pgAdmin default username/password with below environment variables
     environment:
       PGADMIN_DEFAULT_EMAIL: admin@admin.com
       PGADMIN_DEFAULT_PASSWORD: admin
-  graphql-engine:
-    image: hasura/graphql-engine:v2.12.0
-    ports:
-    - "8080:80"
-    depends_on:
-    - "postgres"
-    restart: always
-    environment:
-      ## postgres database to store Hasura metadata
-      HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:admin@postgres:5432/postgres
-      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:admin@postgres:5432/postgres
-      ## enable the console served by server
-      HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
-      ## enable debugging mode. It is recommended to disable this in production
-      HASURA_GRAPHQL_DEV_MODE: "true"
-      ## uncomment next line to run console offline (i.e load console assets from server instead of CDN)
-      HASURA_GRAPHQL_CONSOLE_ASSETS_DIR: /srv/console-assets
-      ## uncomment next line to set an admin secret
-      HASURA_GRAPHQL_ADMIN_SECRET: admin
   webapp:
     command: dev
     dockerfile: Dockerfile.dev
-    depends_on:
-    - "postgres"
     ports:
-    - 3000:3000
     - 9229:9229
+    volumes:
+     - ./packages/webapp:/app
+     - /app/node_modules
+     - /app/.next
+  backend:
+    command: "start:debug"
+    dockerfile: Dockerfile.dev
     environment:
-      NODE_ENV: production
-      SERVER_PORT: 8000
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      CONNECTIONSTRING: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/notes
+      NODE_OPTIONS: --inspect
+    volumes:
+     - ./packages/backend:/app
+  e2e:
+    image: cypress
     build:
       context: packages/webapp
+      dockerfile: cypress/Dockerfile
+    container_name: cypress
+    # mount the host directory e2e/cypress and the file e2e/cypress.json as
+    # volumes within the container
+    # this means that:
+    #  1. anything that Cypress writes to these folders (e.g., screenshots,
+    #     videos) appears also on the Docker host's filesystem
+    #  2. any change that the developer applies to Cypress files on the host
+    #     machine immediately takes effect within the e2e container (no docker
+    #     rebuild required).
     volumes:
-     - ./packages/webapp:/usr/src/app
-     - /usr/src/app/node_modules
-     - /usr/src/app/.next
-  backend:
-    dockerfile: Dockerfile.dev
-    ports:
-      - 3001:3001
-    environment:
-      NODE_ENV: production
-      NODE_OPTIONS: --inspect
-    build:
-      context: packages/backend
-    volumes:
-     - ./:/backend
-    #command: npm run start:dev
-volumes:
-  db_data:
+      - ./packages/webapp/cypress:/app/cypress
+      - /app/node_modules
+      - /app/.next
     

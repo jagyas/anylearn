@@ -10,12 +10,12 @@ RUN apk update && apk add yarn curl bash python3 g++ make && rm -rf /var/cache/a
 RUN curl -sfL https://gobinaries.com/tj/node-prune | bash -s -- -b /usr/local/bin
 
 # Create app directory
-RUN mkdir -p /usr/src/app
+RUN mkdir -p /app
 
-WORKDIR /usr/src/app
+WORKDIR /app
 
 # Installing dependencies
-COPY package.json yarn.lock /usr/src/app/
+COPY package.json yarn.lock /app/
 
 RUN yarn --frozen-lockfile
 
@@ -43,7 +43,7 @@ RUN rm -rf node_modules/swagger-ui-dist/*.map
 RUN rm -rf node_modules/couchbase/src/
 
 # Running the app
-FROM gcr.io/distroless/nodejs:18-debug
+FROM gcr.io/distroless/nodejs:18
 WORKDIR /app
 
 # Mark as prod, disable telemetry, set port
@@ -52,11 +52,9 @@ ENV PORT 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Copy from build
-COPY --from=BUILD_IMAGE /usr/src/app/.next/standalone ./
-COPY --from=BUILD_IMAGE /usr/src/app/public ./public
-COPY --from=BUILD_IMAGE /usr/src/app/.next/static ./.next/static
-
-#COPY --from=BUILD_IMAGE /usr/src/app/server.js ./
+COPY --from=BUILD_IMAGE /app/.next/standalone ./
+COPY --from=BUILD_IMAGE /app/public ./public
+COPY --from=BUILD_IMAGE /app/.next/static ./.next/static
 
 # Run app command
 CMD [ "server.js" ]

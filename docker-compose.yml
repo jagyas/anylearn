@@ -4,6 +4,8 @@ services:
   postgres:
     image: postgres:14.5-alpine3.16
     restart: always
+    ports:
+    - 5432:5432
     volumes:
     - db_data:/var/lib/postgresql/data
     #- ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
@@ -29,33 +31,22 @@ services:
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: admin
   webapp:
-    command: dev
-    dockerfile: Dockerfile.dev
     depends_on:
     - "postgres"
+    - "graphql-engine"
+    - "backend"
     ports:
     - 3000:3000
-    - 9229:9229
-    environment:
-      SERVER_PORT: 8000
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      CONNECTIONSTRING: postgresql://$POSTGRES_USER:$POSTGRES_PASSWORD@db:5432/notes
     build:
       context: packages/webapp
-    volumes:
-     - ./packages/webapp:/usr/src/app
-     - /usr/src/app/node_modules
-     - /usr/src/app/.next
   backend:
-    dockerfile: Dockerfile.dev
+    depends_on:
+    - "postgres"
+    - "graphql-engine"
     ports:
       - 3001:3001
     build:
       context: packages/backend
-    volumes:
-     - ./:/backend
-    #command: npm run start:dev
 volumes:
   db_data:
     
