@@ -18,4 +18,4 @@ COPY . .
 
 
 # Running the app
-ENTRYPOINT ["npm", "run"]
+ENTRYPOINT ["npm", "run", "dev"]

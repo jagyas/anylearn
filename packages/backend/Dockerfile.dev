@@ -1,6 +1,8 @@
 
 FROM node:alpine
 
+ENV PORT 3002
+
 WORKDIR /app
 
 COPY package.json yarn.lock ./
@@ -13,7 +15,7 @@ COPY . .
 # lint & test
 RUN yarn lint & yarn test
 
-EXPOSE 3001
+EXPOSE 3002
 
 # Running the app
-ENTRYPOINT ["npm", "run"]
+ENTRYPOINT ["npm", "run", "start:debug"]

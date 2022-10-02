@@ -23,7 +23,7 @@ RUN yarn lint & yarn test
 RUN yarn build
 
 # remove development dependencies
-RUN npm prune --production
+RUN npm prune --omit=dev
 
 # run node prune
 RUN /usr/local/bin/node-prune
@@ -36,8 +36,10 @@ RUN rm -rf node_modules/rxjs/_esm2015/
 RUN rm -rf node_modules/swagger-ui-dist/*.map
 RUN rm -rf node_modules/couchbase/src/
 
-FROM gcr.io/distroless/nodejs:18
+FROM gcr.io/distroless/nodejs:18-debug
 
+ENV NODE_ENV production
+ENV PORT 3002
 
 WORKDIR /app
 

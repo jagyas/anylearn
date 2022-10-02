@@ -1,19 +1,9 @@
 version: "3.9"
 
 services:
-  pgadmin:
-    image: dpage/pgadmin4
-    restart: always
-    depends_on:
-    - postgres
-    ports:
-    - 5050:8081
-    environment:
-      PGADMIN_DEFAULT_EMAIL: admin@admin.com
-      PGADMIN_DEFAULT_PASSWORD: admin
   webapp:
-    command: dev
-    dockerfile: Dockerfile.dev
+    build:
+      dockerfile: Dockerfile.dev
     ports:
     - 9229:9229
     volumes:
@@ -21,18 +11,18 @@ services:
      - /app/node_modules
      - /app/.next
   backend:
-    command: "start:debug"
-    dockerfile: Dockerfile.dev
+    build:
+      dockerfile: Dockerfile.dev
     environment:
       NODE_OPTIONS: --inspect
     volumes:
      - ./packages/backend:/app
-  e2e:
-    image: cypress
-    build:
-      context: packages/webapp
-      dockerfile: cypress/Dockerfile
-    container_name: cypress
+  #e2e:
+    #image: cypress
+    #build:
+      #context: packages/webapp
+      #dockerfile: cypress/Dockerfile
+    #container_name: cypress
     # mount the host directory e2e/cypress and the file e2e/cypress.json as
     # volumes within the container
     # this means that:
@@ -41,8 +31,8 @@ services:
     #  2. any change that the developer applies to Cypress files on the host
     #     machine immediately takes effect within the e2e container (no docker
     #     rebuild required).
-    volumes:
-      - ./packages/webapp/cypress:/app/cypress
-      - /app/node_modules
-      - /app/.next
+    #volumes:
+      #- ./packages/webapp/cypress:/app/cypress
+      #- /app/node_modules
+      #- /app/.next
     
