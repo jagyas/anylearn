@@ -1,0 +1,3 @@
+table:
+  name: number_orders
+  schema: public

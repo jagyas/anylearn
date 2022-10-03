@@ -1,0 +1,3 @@
+table:
+  name: number_order_approved
+  schema: public
