@@ -11,17 +11,28 @@ services:
       #- ./db/init.sql:/docker-entrypoint-initdb.d/create_tables.sql
     environment:
       POSTGRES_PASSWORD: admin
+  hasura-migration:
+    image: hasura/graphql-engine:v2.12.0.cli-migrations-v3
+    depends_on:
+      - "postgres"
+    environment:
+      HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:admin@postgres:5432/postgres
+    volumes:
+      - ./database/graphql/hasura/migrations:/hasura-migrations
+      - ./database/graphql/hasura/metadata:/hasura-metadata
   graphql-engine:
     image: hasura/graphql-engine:v2.12.0
     ports:
       - "8081:8080"
     depends_on:
       - "postgres"
+      - "hasura-migration"
     restart: always
     environment:
       ## postgres database to store Hasura metadata
       HASURA_GRAPHQL_METADATA_DATABASE_URL: postgres://postgres:admin@postgres:5432/postgres
       HASURA_GRAPHQL_DATABASE_URL: postgres://postgres:admin@postgres:5432/postgres
+      PG_DATABASE_URL: postgres://postgres:admin@postgres:5432/postgres
       ## enable the console served by server
       HASURA_GRAPHQL_ENABLE_CONSOLE: "true" # set to "false" to disable console
       ## enable debugging mode. It is recommended to disable this in production
@@ -31,8 +42,6 @@ services:
       ## uncomment next line to set an admin secret
       HASURA_GRAPHQL_ADMIN_SECRET: admin
       #HASURA_GRAPHQL_LOG_LEVEL: debug
-      HASURA_GRAPHQL_MIGRATIONS_DIR: database/migrations
-      HASURA_GRAPHQL_METADATA_DIR: database/metadata
   webapp:
     depends_on:
       - "postgres"
