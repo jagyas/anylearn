@@ -1,7 +1,7 @@
 FROM node:alpine
 
 # Create app directory
-RUN mkdir -p /app
+RUN mkdir /app
 
 WORKDIR /app
 
@@ -16,6 +16,5 @@ COPY . .
 # lint & test
 #RUN yarn lint & yarn test
 
-
 # Running the app
-ENTRYPOINT ["npm", "run", "dev"]
+CMD ["npm", "run", "dev"]

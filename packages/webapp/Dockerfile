@@ -48,7 +48,6 @@ WORKDIR /app
 
 # Mark as prod, disable telemetry, set port
 ENV NODE_ENV production
-ENV PORT 3000
 ENV NEXT_TELEMETRY_DISABLED 1
 
 # Copy from build

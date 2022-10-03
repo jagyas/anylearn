@@ -5,18 +5,20 @@ services:
     build:
       dockerfile: Dockerfile.dev
     ports:
-    - 9229:9229
+      - 9230:9230
     volumes:
-     - ./packages/webapp:/app
-     - /app/node_modules
-     - /app/.next
-  backend:
+      - ./packages/webapp:/app
+      - /app/node_modules
+  core-service:
     build:
       dockerfile: Dockerfile.dev
+    ports:
+      - 9231:9231
     environment:
-      NODE_OPTIONS: --inspect
+      NODE_OPTIONS: --inspect=0.0.0.0:9231
     volumes:
-     - ./packages/backend:/app
+      - ./packages/core-service:/app
+      - /app/node_modules
   #e2e:
     #image: cypress
     #build:
@@ -35,4 +37,3 @@ services:
       #- ./packages/webapp/cypress:/app/cypress
       #- /app/node_modules
       #- /app/.next
-    

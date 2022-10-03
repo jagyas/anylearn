@@ -36,10 +36,9 @@ RUN rm -rf node_modules/rxjs/_esm2015/
 RUN rm -rf node_modules/swagger-ui-dist/*.map
 RUN rm -rf node_modules/couchbase/src/
 
-FROM gcr.io/distroless/nodejs:18-debug
+FROM gcr.io/distroless/nodejs:18
 
 ENV NODE_ENV production
-ENV PORT 3002
 
 WORKDIR /app
 
@@ -47,6 +46,7 @@ WORKDIR /app
 COPY --from=BUILD_IMAGE /app/dist ./dist
 COPY --from=BUILD_IMAGE /app/node_modules ./node_modules
 
+ENV PORT 3001
 EXPOSE 3001
 
 CMD [ "./dist/main.js" ]
