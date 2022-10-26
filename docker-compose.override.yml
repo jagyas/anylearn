@@ -7,9 +7,6 @@ services:
       context: ./packages/webapp
     ports:
       - 9230:9230
-    #volumes:
-      #- ./packages/webapp:/app
-      #- /app/node_modules
   core-service:
     build:
       dockerfile: Dockerfile.dev
@@ -18,24 +15,3 @@ services:
       - 9231:9231
     environment:
       NODE_OPTIONS: --inspect=0.0.0.0:9231
-    #volumes:
-      #- ./packages/core-service:/app
-      #- /app/node_modules
-  #e2e:
-    #image: cypress
-    #build:
-      #context: packages/webapp
-      #dockerfile: cypress/Dockerfile
-    #container_name: cypress
-    # mount the host directory e2e/cypress and the file e2e/cypress.json as
-    # volumes within the container
-    # this means that:
-    #  1. anything that Cypress writes to these folders (e.g., screenshots,
-    #     videos) appears also on the Docker host's filesystem
-    #  2. any change that the developer applies to Cypress files on the host
-    #     machine immediately takes effect within the e2e container (no docker
-    #     rebuild required).
-    #volumes:
-      #- ./packages/webapp/cypress:/app/cypress
-      #- /app/node_modules
-      #- /app/.next
