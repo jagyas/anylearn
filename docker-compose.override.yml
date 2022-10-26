@@ -13,6 +13,7 @@ services:
   core-service:
     build:
       dockerfile: Dockerfile.dev
+      context: ./packages/core-service
     ports:
       - 9231:9231
     environment:
