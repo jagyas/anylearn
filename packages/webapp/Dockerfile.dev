@@ -16,5 +16,7 @@ COPY . .
 # lint & test
 #RUN yarn lint & yarn test
 
+EXPOSE 3000
+
 # Running the app
 CMD ["npm", "run", "dev"]
