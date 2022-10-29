@@ -4,23 +4,21 @@ services:
   webapp:
     build:
       dockerfile: Dockerfile.dev
-      context: ./packages/webapp
     ports:
       - 9230:9230
-    #volumes:
-      #- ./packages/webapp:/app
-      #- /app/node_modules
+    volumes:
+      - ./packages/webapp:/app
+      - /app/node_modules
   core-service:
     build:
       dockerfile: Dockerfile.dev
-      context: ./packages/core-service
     ports:
       - 9231:9231
     environment:
       NODE_OPTIONS: --inspect=0.0.0.0:9231
-    #volumes:
-      #- ./packages/core-service:/app
-      #- /app/node_modules
+    volumes:
+      - ./packages/core-service:/app
+      - /app/node_modules
   #e2e:
     #image: cypress
     #build:
